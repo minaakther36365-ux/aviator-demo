@@ -2,123 +2,66 @@
 <html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVIATOR - bKash 01904599737</title>
+<title>AVIATOR - 01904599737</title>
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}body{background:#0b0c15;color:#fff}
-.header{background:#15161f;height:54px;display:flex;justify-content:space-between;align-items:center;padding:0 12px;border-bottom:2px solid #e2136e;position:sticky;top:0;z-index:10}
-.bal{background:#1f2030;border:1px solid #00ff88;border-radius:10px;padding:6px 12px}
+.header{height:54px;background:#15161f;display:flex;justify-content:space-between;align-items:center;padding:0 10px;border-bottom:2px solid #e2136e;position:sticky;top:0;z-index:10}
+.bal{background:#1f2030;border:1px solid #00ff88;padding:5px 10px;border-radius:10px;font-size:14px}
 .bal b{color:#00ff88}
-.btn-bkash{background:#e2136e;color:#fff;border:none;padding:8px 16px;border-radius:10px;font-weight:900;box-shadow:0 2px 0 #9a0d4a}
-.stage{position:relative;background:radial-gradient(circle at 10% 90%, #2a0a18, #000);height:44vh;min-height:300px;overflow:hidden;border-bottom:1px solid #222}
-#plane{position:absolute;left:10%;bottom:18%;font-size:40px;z-index:3;transition:all.1s linear}
-#trail{position:absolute;left:0;bottom:19%;height:4px;background:linear-gradient(90deg,#e2136e,#ff6b9d);width:10%;z-index:2;box-shadow:0 0 10px #e2136e}
-#multWrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;z-index:4}
-#mult{font-size:70px;font-weight:900;letter-spacing:-2px}
-.bets{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}
+.btns{display:flex;gap:6px}
+.btn-top{border:none;padding:7px 12px;border-radius:8px;font-weight:900;font-size:12px}
+.dep{background:#e2136e;color:#fff}.with{background:#00ff88;color:#000}
+.stage{position:relative;background:#000;height:38vh;min-height:260px;overflow:hidden}
+#plane{position:absolute;left:10%;bottom:18%;font-size:38px;transition:.1s}
+#trail{position:absolute;left:0;bottom:19%;height:4px;background:#e2136e;width:10%}
+#multWrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
+#mult{font-size:66px;font-weight:900}
+.bets{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px}
 @media(max-width:700px){.bets{grid-template-columns:1fr}}
-.card{background:#1a1c28;border-radius:16px;padding:12px;border:1px solid #2a2c3d}
-.input{background:#0f101a;border:1px solid #2a2c3d;border-radius:10px;padding:8px;display:flex;justify-content:space-between;align-items:center}
-.input input{background:transparent;border:none;color:#fff;width:70px;font-weight:800;outline:none;font-size:16px}
-.btn{width:100%;height:54px;border-radius:12px;border:none;font-weight:900;margin-top:10px;font-size:15px}
-.btn-bet{background:#28a909;color:#fff;box-shadow:0 3px 0 #1d7c06}
-.btn-cash{background:#ff8c00;color:#000;box-shadow:0 3px 0 #c56e00}
-#depModal{position:fixed;inset:0;background:#000e;display:none;align-items:center;justify-content:center;z-index:99;padding:15px}
-.box{background:#1a1c28;border-radius:18px;padding:20px;width:100%;max-width:400px;border:2px solid #e2136e}
-.box input{width:100%;padding:13px;border-radius:10px;border:1px solid #333;background:#0f101a;color:#fff;margin:7px 0;font-size:15px}
-.step{background:#e2136e15;border:1px dashed #e2136e;padding:12px;border-radius:12px;margin:12px 0;font-size:13px;line-height:1.6}
-.num{color:#00ff88;font-weight:900;font-size:16px;letter-spacing:1px}
+.card{background:#1a1c28;border-radius:14px;padding:10px;border:1px solid #2a2c3d}
+.input{background:#0f101a;border:1px solid #2a2c3d;border-radius:8px;padding:6px;display:flex;justify-content:space-between;align-items:center}
+.input input{background:transparent;border:none;color:#fff;width:60px;font-weight:800;outline:none}
+.btn{width:100%;height:50px;border-radius:10px;border:none;font-weight:900;margin-top:8px}
+.btn-bet{background:#28a909;color:#fff}.btn-cash{background:#ff8c00}
+.modal{position:fixed;inset:0;background:#000e;display:none;align-items:center;justify-content:center;z-index:99;padding:12px}
+.box{background:#1a1c28;border-radius:16px;padding:18px;width:100%;max-width:380px;border:2px solid #e2136e;max-height:90vh;overflow:auto}
+.box input{width:100%;padding:11px;border-radius:8px;border:1px solid #333;background:#0f101a;color:#fff;margin:5px 0}
+.hist{font-size:11px;background:#0f101a;padding:8px;border-radius:8px;margin-top:8px;max-height:100px;overflow:auto}
 </style>
 </head>
 <body>
 <div class="header">
 <b>✈️ AVIATOR</b>
-<div style="display:flex;gap:8px;align-items:center">
-<div class="bal">💰 <b id="bal">1000.00</b> BDT</div>
-<button class="btn-bkash" onclick="openDep()">DEPOSIT</button>
+<div style="display:flex;gap:6px;align-items:center">
+<div class="bal">💰 <b id="bal">1000.00</b></div>
+<div class="btns"><button class="btn-top dep" onclick="openM('depModal')">DEPOSIT</button><button class="btn-top with" onclick="openM('withModal')">WITHDRAW</button></div>
 </div>
 </div>
 
-<div class="stage">
-<div id="trail"></div><div id="plane">✈️</div>
-<div id="multWrap"><div id="mult">1.00x</div><div id="stat" style="font-size:11px;color:#8a8fa8;letter-spacing:2px">WAITING FOR NEXT ROUND</div></div>
-</div>
+<div class="stage"><div id="trail"></div><div id="plane">✈️</div><div id="multWrap"><div id="mult">1.00x</div><div id="stat" style="font-size:10px;color:#888">WAITING</div></div></div>
 
 <div class="bets">
-<div class="card"><div style="display:flex;justify-content:space-between"><small>BET 1</small><small>AUTO <input type="checkbox" id="auto1"></small></div><div style="display:flex;gap:8px;margin-top:8px"><div class="input"><button onclick="chg(1,-10)" style="background:#232538;border:none;color:#fff;width:26px;height:26px;border-radius:50%">-</button><input id="b1" value="50"><button onclick="chg(1,10)" style="background:#232538;border:none;color:#fff;width:26px;height:26px;border-radius:50%">+</button></div><div class="input"><input id="a1" value="2.00"><small>x</small></div></div><button class="btn btn-bet" id="btn1">BET 50.00</button></div>
-<div class="card"><div style="display:flex;justify-content:space-between"><small>BET 2</small><small>AUTO <input type="checkbox" id="auto2"></small></div><div style="display:flex;gap:8px;margin-top:8px"><div class="input"><button onclick="chg(2,-10)" style="background:#232538;border:none;color:#fff;width:26px;height:26px;border-radius:50%">-</button><input id="b2" value="50"><button onclick="chg(2,10)" style="background:#232538;border:none;color:#fff;width:26px;height:26px;border-radius:50%">+</button></div><div class="input"><input id="a2" value="2.00"><small>x</small></div></div><button class="btn btn-bet" id="btn2">BET 50.00</button></div>
+<div class="card"><small>BET 1</small><div style="display:flex;gap:6px;margin-top:6px"><div class="input"><input id="b1" value="50"></div><div class="input"><input id="a1" value="2.00"><small>x</small></div></div><button class="btn btn-bet" id="btn1">BET 50</button></div>
+<div class="card"><small>BET 2</small><div style="display:flex;gap:6px;margin-top:6px"><div class="input"><input id="b2" value="50"></div><div class="input"><input id="a2" value="2.00"><small>x</small></div></div><button class="btn btn-bet" id="btn2">BET 50</button></div>
 </div>
 
-<!-- bKash Deposit Modal with YOUR Number -->
-<div id="depModal">
-<div class="box">
+<!-- DEPOSIT MODAL -->
+<div id="depModal" class="modal"><div class="box">
 <h3 style="color:#e2136e;text-align:center">💳 bKash Deposit</h3>
-<div class="step">
-<b>1.</b> bKash App থেকে <b>Send Money</b> করো এই নাম্বারে:<br>
-<span class="num">01904599737</span> <button onclick="navigator.clipboard.writeText('01904599737');alert('Copied!')" style="background:#e2136e;color:#fff;border:none;padding:2px 8px;border-radius:6px;font-size:11px">COPY</button><br>
-<b>2.</b> Amount: তোমার ইচ্ছা মতো (50, 100, 500)<br>
-<b>3.</b> Reference: <b>Aviator</b><br>
-<b>4.</b> TrxID টা কপি করে নিচে বসাও
+<div style="background:#e2136e22;border:1px dashed #e2136e;padding:10px;border-radius:10px;margin:10px 0;font-size:12px;line-height:1.5">
+Send Money: <b style="color:#00ff88;font-size:16px">01904599737</b> <button onclick="navigator.clipboard.writeText('01904599737');alert('Copied!')" style="background:#e2136e;color:#fff;border:none;padding:2px 6px;border-radius:5px;font-size:10px">COPY</button><br>Ref: Aviator
 </div>
-<input id="depNum" placeholder="তোমার bKash নাম্বার (যে নাম্বার থেকে পাঠিয়েছো)" type="tel">
-<input id="depAmt" placeholder="Amount - 100, 500, 1000" type="number">
-<input id="depTrx" placeholder="bKash TrxID (Ex: 8N7M2X9K...)" type="text" style="text-transform:uppercase">
-<button style="background:#e2136e;color:#fff;padding:13px;border:none;border-radius:10px;width:100%;font-weight:900;margin-top:8px" onclick="submitDep()">✅ SUBMIT & ADD BALANCE</button>
-<button style="background:#2a2c3d;color:#fff;padding:11px;border:none;border-radius:10px;width:100%;margin-top:8px" onclick="closeDep()">CANCEL</button>
-<div id="depHistory" style="margin-top:12px;font-size:12px;max-height:110px;overflow:auto;background:#0f101a;padding:8px;border-radius:8px"></div>
-<p style="font-size:10px;color:#666;margin-top:10px;text-align:center">Demo Mode: এখন Auto Approve হবে। Real User দের জন্য তুমি Admin Panel থেকে Approve করবে।</p>
-</div>
-</div>
+<input id="depNum" placeholder="তোমার bKash নাম্বার" type="tel">
+<input id="depAmt" placeholder="Amount - 500" type="number">
+<input id="depTrx" placeholder="bKash TrxID" type="text">
+<button style="background:#e2136e;color:#fff;padding:12px;border:none;border-radius:8px;width:100%;font-weight:900;margin-top:6px" onclick="submitDep()">SUBMIT & ADD BALANCE</button>
+<button style="background:#2a2c3d;color:#fff;padding:10px;border:none;border-radius:8px;width:100%;margin-top:6px" onclick="closeM('depModal')">CANCEL</button>
+<div id="depHist" class="hist"></div>
+</div></div>
 
-<script>
-const socket=io();
-let balance=parseFloat(localStorage.getItem('aviator_bal')||'1000');
-let myBets=[null,null];
-document.getElementById('bal').innerText=balance.toFixed(2);
-function save(){localStorage.setItem('aviator_bal',balance);document.getElementById('bal').innerText=balance.toFixed(2);}
-function chg(n,d){let el=document.getElementById('b'+n);let v=Math.max(10,(parseFloat(el.value)||10)+d);el.value=v;document.getElementById('btn'+n).innerText='BET '+v.toFixed(2);}
-function openDep(){document.getElementById('depModal').style.display='flex';loadHist();}
-function closeDep(){document.getElementById('depModal').style.display='none';}
-function loadHist(){let h=JSON.parse(localStorage.getItem('dep_hist')||'[]');document.getElementById('depHistory').innerHTML=h.length?h.map(x=>`<div style="padding:4px 0;border-bottom:1px solid #222;display:flex;justify-content:space-between"><span>${x.amt} BDT - ${x.trx}</span><b style="color:${x.status=='Approved'?'#0f0':'#ff0'}">${x.status}</b></div>`).join(''):'<span style="color:#666">কোনো Deposit History নেই</span>';}
-function submitDep(){
-  let num=document.getElementById('depNum').value.trim();
-  let amt=parseFloat(document.getElementById('depAmt').value);
-  let trx=document.getElementById('depTrx').value.trim().toUpperCase();
-  if(!num||num.length<11)return alert('তোমার bKash নাম্বার সঠিক দাও');
-  if(!amt||amt<20)return alert('মিনিমাম 20 টাকা');
-  if(!trx||trx.length<5)return alert('সঠিক TrxID দাও');
-  let hist=JSON.parse(localStorage.getItem('dep_hist')||'[]');
-  if(hist.find(x=>x.trx==trx))return alert('এই TrxID আগে ব্যবহার হয়েছে!');
-  hist.unshift({amt,trx,num,status:'Pending',time:Date.now()});
-  localStorage.setItem('dep_hist',JSON.stringify(hist));
-  loadHist();
-  alert('Request পাঠানো হয়েছে! Verifying TrxID: '+trx+'\n3 সেকেন্ডে Balance যোগ হবে...');
-  setTimeout(()=>{
-    balance+=amt;save();
-    hist[0].status='Approved';localStorage.setItem('dep_hist',JSON.stringify(hist));
-    loadHist();
-    alert('✅ Success! '+amt+' BDT তোমার Balance এ যোগ হয়েছে!\nনতুন Balance: '+balance.toFixed(2)+' BDT');
-    closeDep();
-    socket.emit('deposit_request',{num,amt,trx,method:'bKash',to:'01904599737'});
-  },3000);
-}
-socket.on('new_round_started',()=>{
-  document.getElementById('mult').innerText='1.00x';document.getElementById('mult').style.color='#fff';
-  document.getElementById('plane').style.left='10%';document.getElementById('plane').style.bottom='18%';document.getElementById('trail').style.width='10%';document.getElementById('plane').innerText='✈️';
-  document.getElementById('stat').innerText='FLYING';document.getElementById('stat').style.color='#00ff88';myBets=[null,null];
-  [1,2].forEach(i=>{let b=document.getElementById('btn'+i);b.disabled=false;b.className='btn btn-bet';b.innerText='BET '+document.getElementById('b'+i).value;});
-  if(document.getElementById('auto1').checked)place(1);if(document.getElementById('auto2').checked)place(2);
-});
-socket.on('multiplier_update',(m)=>{
-  let f=parseFloat(m);document.getElementById('mult').innerText=m+'x';
-  let p=Math.min(f*6,85);document.getElementById('plane').style.left=(10+p)+'%';document.getElementById('plane').style.bottom=(18+p*0.6)+'%';document.getElementById('trail').style.width=(10+p)+'%';
-  myBets.forEach((b,i)=>{if(b&&!b.cashed){let btn=document.getElementById('btn'+(i+1));btn.className='btn btn-cash';btn.innerText='CASHOUT '+(b.amount*f).toFixed(2);let auto=parseFloat(document.getElementById('a'+(i+1)).value);if(f>=auto)cash(i+1);}});
-});
-socket.on('crashed',(c)=>{document.getElementById('mult').innerText='CRASHED '+c+'x';document.getElementById('mult').style.color='#e2136e';document.getElementById('plane').innerText='💥';document.getElementById('stat').innerText='CRASHED @ '+c+'x';document.getElementById('stat').style.color='#e2136e';myBets=[null,null];});
-function place(n){let amt=parseFloat(document.getElementById('b'+n).value);if(balance<amt)return alert('Balance কম! DEPOSIT করো - 01904599737');balance-=amt;save();myBets[n-1]={amount:amt,cashed:false};socket.emit('place_bet',{bet:amt,name:'You'});let btn=document.getElementById('btn'+n);btn.disabled=true;btn.innerText='WAITING...';setTimeout(()=>{btn.disabled=false;btn.className='btn btn-cash';btn.innerText='CASHOUT '+amt.toFixed(2);},300);}
-function cash(n){if(!myBets[n-1]||myBets[n-1].cashed)return;myBets[n-1].cashed=true;let m=parseFloat(document.getElementById('mult').innerText);let win=myBets[n-1].amount*m;balance+=win;save();socket.emit('cashout',{});let btn=document.getElementById('btn'+n);btn.innerText='WON '+win.toFixed(2);btn.style.background='#28a909';}
-document.getElementById('btn1').onclick=()=>{if(myBets[0]&&!myBets[0].cashed)cash(1);else place(1);};
-document.getElementById('btn2').onclick=()=>{if(myBets[1]&&!myBets[1].cashed)cash(2);else place(2);};
-</script>
-</body>
-</html>
+<!-- WITHDRAW MODAL -->
+<div id="withModal" class="modal"><div class="box" style="border-color:#00ff88">
+<h3 style="color:#00ff88;text-align:center">💸 Withdraw</h3>
+<div style="background:#00ff8822;border:1px dashed #00ff88;padding:10px;border-radius:10px;margin:10px 0;font-size:12px">
+Min Withdraw: <b>100 BDT</b><br>তোমার bKash এ টাকা যাবে 5 মিনিটে
