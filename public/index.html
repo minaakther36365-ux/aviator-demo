@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aviator - Pro</title>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<style>
+body{margin:0;background:#0e0e1a;color:white;font-family:Arial}
+.top{background:#1c1c2e;padding:10px;text-align:center;font-weight:bold;color:#ff0040}
+.main{max-width:500px;margin:auto;padding:10px}
+.graph{height:300px;background:#000;border-radius:15px;position:relative;overflow:hidden;border:2px solid #222}
+.plane{position:absolute;left:20px;bottom:30px;font-size:45px}
+.mult{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:70px;font-weight:900}
+.controls{display:flex;gap:10px;margin-top:15px}
+.bet-box{flex:1;background:#1c1c2e;padding:12px;border-radius:12px}
+input{width:90%;padding:10px;border-radius:8px;border:none;margin-top:5px}
+.btn{width:100%;padding:15px;border-radius:10px;border:none;font-weight:bold;font-size:18px;margin-top:10px}
+.btn-bet{background:#00c853;color:white}
+.btn-cash{background:#ffab00;color:black}
+.players{background:#1c1c2e;margin-top:15px;padding:10px;border-radius:12px;min-height:100px}
+</style>
+</head>
+<body>
+<div class="top">✈️ AVIATOR - LIVE</div>
+<div class="main">
+<div class="graph">
+<div class="mult" id="mult">1.00x</div>
+<div class="plane" id="plane">✈️</div>
+</div>
+<div class="controls">
+<div class="bet-box">
+Bet Amount
+<input id="bet" type="number" value="10">
+Name
+<input id="name" value="Player">
+<button class="btn btn-bet" id="betBtn">BET</button>
+<button class="btn btn-cash" id="cashBtn" disabled>CASHOUT</button>
+<div id="status" style="margin-top:10px;font-size:14px">Connecting...</div>
+</div>
+</div>
+<div class="players" id="players">Players...</div>
+</div>
+<script>
+const socket=io();
+const mult=document.getElementById('mult');
+const plane=document.getElementById('plane');
+let hasBet=false, myBet=0;
+socket.on('connect',()=>document.getElementById('status').innerText='Connected');
+socket.on('new_round_started',()=>{mult.innerText='1.00x';mult.style.color='#00ff88';plane.style.left='20px';plane.style.bottom='30px';plane.innerText='✈️';hasBet=false;document.getElementById('betBtn').disabled=false;document.getElementById('cashBtn').disabled=true;});
+socket.on('multiplier_update',(m)=>{mult.innerText=m+'x';let p=parseFloat(m)*12;plane.style.left=(20+p)+'px';plane.style.bottom=(30+p*0.6)+'px';if(hasBet)document.getElementById('cashBtn').innerText='CASHOUT '+(myBet*parseFloat(m)).toFixed(2);});
+socket.on('crashed',(c)=>{mult.innerText='CRASHED '+c+'x';mult.style.color='red';plane.innerText='💥';document.getElementById('betBtn').disabled=false;document.getElementById('cashBtn').disabled=true;hasBet=false;});
+socket.on('players_update',(list)=>{document.getElementById('players').innerHTML=list.map(p=>p.name+': '+p.bet+(p.cashedOut?' ✅ '+p.win:'')).join('<br>')});
+document.getElementById('betBtn').onclick=()=>{myBet=parseFloat(document.getElementById('bet').value);let n=document.getElementById('name').value;socket.emit('place_bet',{bet:myBet,name:n});hasBet=true;document.getElementById('betBtn').disabled=true;document.getElementById('cashBtn').disabled=false;};
+document.getElementById('cashBtn').onclick=()=>{socket.emit('cashout',{});document.getElementById('cashBtn').disabled=true;};
+</script>
+</body>
+</html>
